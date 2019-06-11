@@ -35,7 +35,7 @@ def roll_dice(num_rolls, dice=six_sided):
         else:
             sum += outcome
 
-    return sum 
+    return sum
 
     # END PROBLEM 1
 
@@ -48,7 +48,7 @@ def free_bacon(score):
     assert score < 100, 'The game should be over.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
-    tens , ones = score // 10, score % 10
+    tens, ones = score // 10, score % 10
     if (2*tens - ones > 1):
         return 2*tens - ones
     else:
@@ -74,7 +74,7 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     if num_rolls == 0:
         return free_bacon(opponent_score)
     else:
-        return roll_dice(num_rolls,dice)
+        return roll_dice(num_rolls, dice)
 # END PROBLEM 3
 
 
@@ -90,8 +90,10 @@ def is_swap(player_score, opponent_score):
     return False
     # END PROBLEM 4
 
+
 def abs_sum_last_two(score):
-    return abs((score // 10)%10 - score%10)
+    return abs((score // 10) % 10 - score % 10)
+
 
 def other(player):
     """Return the other player, for a player PLAYER numbered 0 or 1.
@@ -132,18 +134,17 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     while score0 < goal and score1 < goal:
         if not player:
             score0 += take_turn(strategy0(score0, score1), score1, dice)
-            if is_swap(score0,score1):
+            if is_swap(score0, score1):
                 score0, score1 = score1, score0
             player = other(player)
-            f1 = say(score0,score1)
+            f1 = say(score0, score1)
         else:
             score1 += take_turn(strategy1(score1, score0), score0, dice)
             if is_swap(score1, score0):
                 score0, score1 = score1, score0
             player = other(player)
-            f2 = f1(score0,score1)
+            f2 = f1(score0, score1)
             say = f2
-
 
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
@@ -163,6 +164,7 @@ def say_scores(score0, score1):
     """A commentary function that announces the score for each player."""
     print("Player 0 now has", score0, "and Player 1 now has", score1)
     return say_scores
+
 
 def announce_lead_changes(previous_leader=None):
     """Return a commentary function that announces lead changes.
@@ -188,6 +190,7 @@ def announce_lead_changes(previous_leader=None):
             print('Player', leader, 'takes the lead by', abs(score0 - score1))
         return announce_lead_changes(leader)
     return say
+
 
 def both(f, g):
     """Return a commentary function that says what f says, then what g says.
@@ -232,17 +235,17 @@ def announce_highest(who, previous_high=0, previous_score=0):
     "*** YOUR CODE HERE ***"
     def say(score0, score1):
         if who == 0:
-            high0 = score0 - previous_score 
+            high0 = score0 - previous_score
             if (high0 > previous_high):
                 print(high0, "point(s)! That's the biggest gain yet for Player", who)
             else:
                 high0 = previous_high
             return announce_highest(who, high0, score0)
         else:
-            high1 = score1 - previous_score  
+            high1 = score1 - previous_score
             if (high1 > previous_high):
                 print(high1, "point(s)! That's the biggest gain yet for Player", who)
-            else:    
+            else:
                 high1 = previous_high
             return announce_highest(who, high1, score1)
     return say
@@ -285,6 +288,14 @@ def make_averaged(fn, num_samples=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def g(*args):
+        k = 0
+        total = 0
+        while k < num_samples:
+            total += fn(*args)
+            k += 1
+        return total/num_samples
+    return g
     # END PROBLEM 8
 
 
@@ -299,6 +310,14 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    i = 1
+    max = -1
+    while i <= 10:
+        if(make_averaged(roll_dice, num_samples)(i, dice) > max):
+            max = make_averaged(roll_dice, num_samples)(i, dice)
+            die = i
+        i += 1
+    return die
     # END PROBLEM 9
 
 
@@ -347,7 +366,9 @@ def bacon_strategy(score, opponent_score, margin=8, num_rolls=4):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 4  # Replace this statement
+    if(free_bacon(opponent_score) >= margin):
+        return 0
+    return num_rolls  # Replace this statement
     # END PROBLEM 10
 
 
@@ -357,7 +378,17 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=4):
     non-beneficial swap. Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 4  # Replace this statement
+    score += free_bacon(opponent_score)
+    # print(score)
+    if score < opponent_score and is_swap(score, opponent_score):
+        return 0
+    elif score < opponent_score and not is_swap(score, opponent_score):
+        return bacon_strategy(score, opponent_score, margin, num_rolls)
+    elif score > opponent_score and not is_swap(score, opponent_score):
+        return bacon_strategy(score, opponent_score, margin, num_rolls)
+    else:
+        return num_rolls
+    # Replace this statement
     # END PROBLEM 11
 
 
@@ -367,7 +398,7 @@ def final_strategy(score, opponent_score):
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
-    return 4  # Replace this statement
+    return swap_strategy(score, opponent_score)  # Replace this statement
     # END PROBLEM 12
 
 
