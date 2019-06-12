@@ -73,6 +73,20 @@ def pingpong(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    def find(position,value,upordown):
+        if position == n:
+            return value
+        if not position % 7 or has_seven(position):
+            return find_helper(position,value,not upordown)
+        return find_helper(position,value,upordown)
+    
+    def find_helper(position, value, upordown):
+        if upordown:
+            return find(position + 1, value + 1, upordown)
+        else:
+            return find(position + 1, value - 1, upordown)
+
+    return find(1,1,True)
 
 def accumulate(combiner, base, n, term):
     """Return the result of combining the first n terms in a sequence and base.
@@ -120,10 +134,12 @@ def filtered_accumulate(combiner, base, pred, n, term):
     """
     def combine_if(x, y):
         "*** YOUR CODE HERE ***"
-
+        if pred(y):
+            return combiner(x,y)
+        else:
+            return x
+    return accumulate(combine_if, base, n ,term)
             
-    return accumulate(combine_if, base, n, term)
-
 def odd(x):
     return x % 2 == 1
 
