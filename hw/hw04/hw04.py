@@ -1,20 +1,26 @@
+from operator import sub, mul
 HW_SOURCE_FILE = 'hw04.py'
 
 ###############
 #  Questions  #
 ###############
 
+
 def intersection(st, ave):
     """Represent an intersection using the Cantor pairing function."""
     return (st+ave)*(st+ave+1)//2 + ave
 
+
 def street(inter):
     return w(inter) - avenue(inter)
+
 
 def avenue(inter):
     return inter - (w(inter) ** 2 + w(inter)) // 2
 
-w = lambda z: int(((8*z+1)**0.5-1)/2)
+
+def w(z): return int(((8*z+1)**0.5-1)/2)
+
 
 def taxicab(a, b):
     """Return the taxicab distance between two intersections.
@@ -27,6 +33,8 @@ def taxicab(a, b):
     9
     """
     "*** YOUR CODE HERE ***"
+    return abs(street(a) - street(b)) + abs(avenue(a) - avenue(b))
+
 
 def squares(s):
     """Returns a new list containing square roots of the elements of the
@@ -40,6 +48,8 @@ def squares(s):
     []
     """
     "*** YOUR CODE HERE ***"
+    return [round(n ** 0.5) for n in s if round(n ** 0.5) ** 2 == n]
+
 
 def g(n):
     """Return the value of G(n), computed recursively.
@@ -59,6 +69,11 @@ def g(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n <= 3:
+        return n
+    else:
+        return g(n-1) + 2*g(n-2) + 3 * g(n-3)
+
 
 def g_iter(n):
     """Return the value of G(n), computed iteratively.
@@ -78,6 +93,15 @@ def g_iter(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n <= 3:
+        return n
+    i = 4
+    first, second, third = 1, 2, 3
+    while i <= n:
+        first, second, third = second, third, third + 2*second + 3*first
+        i += 1
+    return third
+
 
 def count_change(amount):
     """Return the number of ways to make change for amount.
@@ -95,10 +119,28 @@ def count_change(amount):
     True
     """
     "*** YOUR CODE HERE ***"
+    # i = 1
+    # while i*2 <= amount:
+    #     i = i*2
+
+    def count_change_helper(amount, number):
+        if (amount == 0):
+            return 1
+        if number == 0:
+            return 0
+        if (number > amount):
+            return 0
+        else:
+            with_i = count_change_helper(amount - number, number)
+            without_i = count_change_helper(amount, number*2)
+            return with_i + without_i
+    return count_change_helper(amount, 1)
+
 
 def print_move(origin, destination):
     """Print instructions to move a disk."""
     print("Move the top disk from rod", origin, "to rod", destination)
+
 
 def move_stack(n, start, end):
     """Print the moves required to move n disks on the start pole to the end
@@ -129,12 +171,16 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        print_move(start, end)
+    else:
+        move_stack(n-1, start, end-start)
+    move_stack(n-1, start, end)
 
 ###################
 # Extra Questions #
 ###################
 
-from operator import sub, mul
 
 def make_anonymous_factorial():
     """Return the value of an expression that computes factorial.
@@ -145,4 +191,4 @@ def make_anonymous_factorial():
     >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return
