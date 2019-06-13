@@ -174,8 +174,9 @@ def move_stack(n, start, end):
     if n == 1:
         print_move(start, end)
     else:
-        move_stack(n-1, start, end-start)
-    move_stack(n-1, start, end)
+        move_stack(n-1, start, abs(end+start-6))
+        print_move(start,end)
+        move_stack(n-1, abs(start+end-6), end)
 
 ###################
 # Extra Questions #
