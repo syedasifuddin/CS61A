@@ -16,6 +16,13 @@ def flatten(lst):
     [1, 1, 1, 1, 1, 1]
     """
     "*** YOUR CODE HERE ***"
+    list1 = []   
+    for i in lst:
+        if type(i) == list:
+            list1 += flatten(i)
+        else : 
+            list1 += [i]
+    return list1
 
 # Q7
 def merge(lst1, lst2):
@@ -31,6 +38,24 @@ def merge(lst1, lst2):
     [2, 4, 5, 6, 7]
     """
     "*** YOUR CODE HERE ***"
+    if len(lst1) == 0:
+        return lst2
+    elif len(lst2) == 0:
+        return lst1
+    else:
+        i = 0
+        j = 0
+        lst = []
+        while (i < len(lst1) and j < len(lst2)):
+            if(lst1[i]<lst2[j]):
+                lst += [lst1[i]]
+                i += 1
+            else:
+                lst += [lst2[j]]
+                j += 1
+        return lst + lst1[i:] + lst2[j:]
+
+
 
 ######################
 ### Connect N Game ###
@@ -44,6 +69,7 @@ def create_row(size):
     ['-', '-', '-', '-', '-']
     """
     "*** YOUR CODE HERE ***"
+    return ['-' for i in range(size)]
 
 
 def create_board(rows, columns):
@@ -53,7 +79,7 @@ def create_board(rows, columns):
     [['-', '-', '-', '-', '-'], ['-', '-', '-', '-', '-'], ['-', '-', '-', '-', '-']]
     """
     "*** YOUR CODE HERE ***"
-
+    return [create_row(columns) for i in range(rows)]
 
 def replace_elem(lst, index, elem):
     """Create and return a new list whose elements are the same as those in
@@ -68,6 +94,7 @@ def replace_elem(lst, index, elem):
     """
     assert index >= 0 and index < len(lst), 'Index is out of bounds'
     "*** YOUR CODE HERE ***"
+    return lst[0:index] + [elem] + lst[index+1:]
 
 
 def get_piece(board, row, column):
