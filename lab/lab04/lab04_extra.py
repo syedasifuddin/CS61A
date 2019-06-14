@@ -110,6 +110,9 @@ def get_piece(board, row, column):
     '-'
     """
     "*** YOUR CODE HERE ***"
+    return board[row][column]
+
+
 
 
 def put_piece(board, max_rows, column, player):
@@ -119,7 +122,6 @@ def put_piece(board, max_rows, column, player):
         1. The index of the row the piece ends up in, or -1 if the column
            is full.
         2. The new board
-
     >>> rows, columns = 2, 2
     >>> board = create_board(rows, columns)
     >>> row, new_board = put_piece(board, rows, 0, 'X')
@@ -133,6 +135,16 @@ def put_piece(board, max_rows, column, player):
     -1
     """
     "*** YOUR CODE HERE ***"
+    i = max_rows - 1
+    while (i >= 0):
+        if (board[i][column] == '-'):
+            board[i] = replace_elem(board[i], column, player)
+            return i, board
+        else:
+            i -= 1
+    return i , board
+
+
 
 
 def make_move(board, max_rows, max_cols, col, player):
@@ -161,6 +173,10 @@ def make_move(board, max_rows, max_cols, col, player):
     -1
     """
     "*** YOUR CODE HERE ***"
+    if col < 0 or col > max_cols:
+        return -1, board
+    else:
+        return put_piece(board, max_rows, col, player)
 
 def print_board(board, max_rows, max_cols):
     """Prints the board. Row 0 is at the top, and column 0 at the far left.
@@ -176,6 +192,11 @@ def print_board(board, max_rows, max_cols):
     X -
     """
     "*** YOUR CODE HERE ***"
+    for i in range(max_rows):
+        s = ""
+        for j in range(max_cols):
+            s += board[i][j] + " "
+        print(s.strip())
 
 def check_win_row(board, max_rows, max_cols, num_connect, row, player):
     """ Returns True if the given player has a horizontal win
@@ -200,10 +221,33 @@ def check_win_row(board, max_rows, max_cols, num_connect, row, player):
     False
     """
     "*** YOUR CODE HERE ***"
+    j = 0
+    for i in board[row]:
+        # print(board[row])
+        # print(i)
+        if j == num_connect:
+            return True
+        if i == player:
+            # print(j)
+            j += 1
+        else:
+            j = 0
+    if j == num_connect:
+        return True
+    return False
 
 def check_win_column(board, max_rows, max_cols, num_connect, col, player):
     """ Returns True if the given player has a vertical win in the given column,
     and otherwise False.
+
+
+    >>> rows, columns, num_connect = 2, 2, 2
+    >>> board = create_board(rows, columns)
+    >>> board = make_move(board, rows, columns, 0, 'X')[1]
+    >>> board = make_move(board, rows, columns, 1, 'O')[1]
+    >>> board = make_move(board, rows, columns, 0, 'X')[1]
+    >>> check_win_column(board, rows, columns, num_connect, 0, 'X')
+    True
 
     >>> rows, columns, num_connect = 5, 5, 2
     >>> board = create_board(rows, columns)
@@ -225,6 +269,25 @@ def check_win_column(board, max_rows, max_cols, num_connect, col, player):
     False
     """
     "*** YOUR CODE HERE ***"
+    col1 = []
+    for row in board:
+        col1 += [row[col]]
+
+    # print(col1)
+    j = 0
+    for i in col1:
+        # print(board[row])
+        # print(i)
+        if j == num_connect:
+            return True
+        if  i == player:
+            # print(j)
+            j += 1
+        else:
+            j = 0
+    if j == num_connect:
+            return True
+    return False
 
 def check_win(board, max_rows, max_cols, num_connect, row, col, player):
     """Returns True if the given player has any kind of win passing through 
@@ -261,6 +324,9 @@ def check_win(board, max_rows, max_cols, num_connect, row, col, player):
     diagonal_win = check_win_diagonal(board, max_rows, max_cols, num_connect,
                                       row, col, player)
     "*** YOUR CODE HERE ***"
+    horizontal_win = check_win_row(board, max_rows, max_cols, num_connect,row, player)
+    vertical_win = check_win_column(board, max_rows, max_cols, num_connect,col, player)
+    return vertical_win or horizontal_win or diagonal_win
 
 ###############################################################
 ### Functions for reference when solving the other problems ###
