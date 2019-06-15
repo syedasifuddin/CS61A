@@ -6,6 +6,7 @@ from random import sample
 # Rename the built-in zip (http://docs.python.org/3/library/functions.html#zip)
 _zip = zip
 
+
 def map_and_filter(s, map_fn, filter_fn):
     """Returns a new list containing the results of calling map_fn on each
     element of sequence s for which filter_fn returns a true value.
@@ -16,8 +17,9 @@ def map_and_filter(s, map_fn, filter_fn):
     [1, 9, 25]
     """
     # BEGIN Question 0
-    return ['REPLACE THIS WITH YOUR LIST COMPREHENSION']
+    return [map_fn(x) for x in s if filter_fn(x)]
     # END Question 0
+
 
 def key_of_min_value(d):
     """Returns the key in a dict d that corresponds to the minimum value of d.
@@ -29,8 +31,9 @@ def key_of_min_value(d):
     'c'
     """
     # BEGIN Question 0
-    return min('REPLACE THIS WITH YOUR SOLUTION')
+    return min(d, key=lambda x: d[x])
     # END Question 0
+
 
 def zip(*sequences):
     """Returns a list of lists, where the i-th list contains the i-th
@@ -51,6 +54,7 @@ def zip(*sequences):
     """
     return list(map(list, _zip(*sequences)))
 
+
 def enumerate(s, start=0):
     """Returns a list of lists, where the i-th list contains i+start and
     the i-th element of s.
@@ -62,7 +66,13 @@ def enumerate(s, start=0):
     """
     # BEGIN Question 0
     "*** YOUR CODE HERE ***"
+    list = []
+    i = 0
+    for i in range(len(s)):
+        list += [[i+start, s[i]]]
+    return list
     # END Question 0
+
 
 def distance(pos1, pos2):
     """Returns the Euclidean distance between pos1 and pos2, which are pairs.
@@ -71,6 +81,7 @@ def distance(pos1, pos2):
     5.0
     """
     return sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
+
 
 def mean(s):
     """Returns the arithmetic mean of a sequence of numbers s.
@@ -82,4 +93,6 @@ def mean(s):
     """
     # BEGIN Question 1
     "*** YOUR CODE HERE ***"
+    assert len(s) > 0, "Sequence should not be empty"
+    return sum(s)/len(s)
     # END Question 1
