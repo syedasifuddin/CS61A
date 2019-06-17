@@ -3,6 +3,8 @@
 from lab05 import *
 
 # Shakespeare and Dictionaries
+
+
 def build_successors_table(tokens):
     """Return a dictionary: keys are words; values are lists of successors.
 
@@ -22,9 +24,12 @@ def build_successors_table(tokens):
     for word in tokens:
         if prev not in table:
             "*** YOUR CODE HERE ***"
-        "*** YOUR CODE HERE ***"
+            table[prev] = [word]
+        else:
+            table[prev] += [word]
         prev = word
     return table
+
 
 def construct_sent(word, table):
     """Prints a random sentence starting with word, sampling from
@@ -40,7 +45,11 @@ def construct_sent(word, table):
     result = ''
     while word not in ['.', '!', '?']:
         "*** YOUR CODE HERE ***"
+        randomword = random.choice(table[word])
+        result += word + " "
+        word = randomword
     return result.strip() + word
+
 
 def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com/shakespeare.txt'):
     """Return the words of Shakespeare's plays as a list."""
@@ -52,15 +61,19 @@ def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com
         shakespeare = urlopen(url)
         return shakespeare.read().decode(encoding='ascii').split()
 
+
 # Uncomment the following two lines
-# tokens = shakespeare_tokens()
-# table = build_successors_table(tokens)
+tokens = shakespeare_tokens()
+table = build_successors_table(tokens)
+
 
 def random_sent():
     import random
     return construct_sent(random.choice(table['.']), table)
 
 # Q6
+
+
 def sprout_leaves(t, vals):
     """Sprout new leaves containing the data in vals at each leaf in
     the original tree t and return the resulting tree.
@@ -95,8 +108,14 @@ def sprout_leaves(t, vals):
           2
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return tree(label(t), [tree(b) for b in vals])
+    else:
+        return tree(label(t), [sprout_leaves(b, vals) for b in branches(t)])
 
 # Q7
+
+
 def add_trees(t1, t2):
     """
     >>> numbers = tree(1,
@@ -133,3 +152,7 @@ def add_trees(t1, t2):
       5
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t1) and is_leaf(t2):
+        return tree(label(t1) + label(t2))
+    else:
+        return tree(label(t1) + label(t2), [add_trees(b[0], b[1]) for b in zip(branches(t1), branches(t2))])
